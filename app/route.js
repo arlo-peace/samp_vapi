@@ -2,7 +2,7 @@ const express = require('express')
 const { networkInterfaces } = require('os');
 const axios = require('axios');
 const path = require('path');
-const { videoUpload, videoUploads, videoUploadsCheck } = require('./controllers/videoUpload');
+const { videoUpload, videoUploads, videoUploadsCheck, videoReceives } = require('./controllers/videoUpload');
 const { videoList, videoDelt, dashboard } = require('./controllers/videoList');
 const { login, changePasswrod } = require('./controllers/login');
 const { verifyToken } = require('./_helper/token');
@@ -66,6 +66,8 @@ router.get('/demoplay/:folder/:folder1/:folder2/:segment', (req, res) => {
 router.get('/uploads', videoUploadsCheck)
 router.post('/uploads', videoUploads)
 router.post('/upload', videoUpload)
+
+router.post('/data/receiver', videoReceives)
 
 //Admin Route
 router.post('/adminlogin', login)

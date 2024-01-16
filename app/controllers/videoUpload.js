@@ -1,7 +1,7 @@
 const multer = require("multer");
 const path = require('path');
 const fs = require('fs');
-const { getVideo } = require("../models/video.model");
+const { getVideo, manyInsertVideo, insertVideo } = require("../models/video.model");
 const videoQueue = require('../libs/queue')
 
 // File validation function
@@ -139,4 +139,42 @@ module.exports.videoUploads = (req, res) => {
 
 module.exports.videoUpload = (req, res) => {
     res.send('Upload page.')
+}
+
+module.exports.videoReceives = async (req, res) => {
+    const dataList = req.body.data;
+    // id, from, title, pic, share, url, videos, snaps, duration, orgfile, qr, outdir, rpath, user, metadata, size, status, created_at, updated_at
+    if(dataList.length > 100){
+        res.status(204).json({
+            status: 2400,
+            message: "Too many data"
+        });
+    } else {
+        for (const row of dataList) {
+            await insertVideo({
+                from: row?.from, 
+                title: row?.title, 
+                md5: row?.md5, // title md5
+                // share: row?.size, 
+                url: row?.url, // hls url
+                videos: row?.videos, 
+                snaps: row?.images, // [] images 
+                duration: row?.duration, 
+                orgfile: row?.orgfile, 
+                // qr: row?.qr, // can null/
+                outdir: row?.outdir, // output dir
+                // rpath: row?.rpath, // 20240106/QjSYtkIB
+                // user: row?.user, //  
+                metadata: {}, // {"domain":"https://play.lubugou.vip","ratio":{"w":"1280","h":"-1"},"vbr":"2000k","abr":"128k","shd":"3","frr":"25","screen":["320:-1","320:-1","320:-1","320:-1","320:-1","320:-1","320:-1","320:-1","320:-1","320:-1","320:-1"],"quality":"5","storeMp4":true}
+                size: row?.size, 
+                status: 1, 
+                created_at: Date.now(),
+                updated_at: Date.now()
+            })
+        }
+        res.status(204).json({
+            status: 2400,
+            message: "Too many data"
+        });
+    }
 }

@@ -153,6 +153,18 @@ module.exports.insertVideo = (data) => {
     })
 }
 
+module.exports.manyInsertVideo = (data) => {
+    return new Promise((resolve, reject) => {
+        db.query(`INSERT INTO videos SET ?`, data, function(error, results, fields) {
+            if (error){
+                reject(error)
+                throw error
+            }
+            resolve(results)
+        })
+    })
+}
+
 module.exports.updateVideoDuration = (id, data) => {
     return new Promise((resolve, reject) => {
         db.query(`UPDATE videos SET duration = ? WHERE md5 = ?`, [data, id], function(error, results, fields) {
